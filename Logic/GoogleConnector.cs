@@ -12,7 +12,6 @@ namespace LetsChess_Backend.Logic
 	public class GoogleConnector
 	{
 		private readonly string clientId;
-
 		public GoogleConnector(string clientId)
 		{
 			this.clientId = clientId;
