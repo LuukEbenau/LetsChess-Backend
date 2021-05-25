@@ -1,20 +1,16 @@
 ﻿using LetsChess_Backend.Logic;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using LetsChess_Backend.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
+using LetsChess_Backend.WSClients;
 
 namespace LetsChess_Backend.Controllers
 {
@@ -24,15 +20,27 @@ namespace LetsChess_Backend.Controllers
 	{
 		private readonly AuthSettings authSettings;
 		private readonly GoogleConnector authConnector;
+		private readonly UserServiceConnector userServiceConnector;
+		private readonly ILogger<AuthController> logger;
 
-		public AuthController(IOptions<AuthSettings> authSettings)
+		public AuthController(IOptions<AuthSettings> authSettings, IOptions<ServiceEndpoints> serviceEndpoints, ILogger<AuthController> logger)
 		{
 			this.authSettings = authSettings.Value;
 			authConnector = new GoogleConnector(authSettings.Value.ClientId);
+			userServiceConnector = new UserServiceConnector(serviceEndpoints?.Value?.UserService);
+
+			this.logger = logger;
 		}
+
 		[HttpGet("redirectToIdentity")]
-		public async Task<IActionResult> RedirectToIdentity(string redirectUrl) {
-			if (redirectUrl == default) return BadRequest("the Required parameter redirectUrl is not supplied");
+		public IActionResult RedirectToIdentity(string redirectUrl) {
+			if (redirectUrl == default) {
+				var responseMessage = "the Required parameter redirectUrl is not supplied";
+				logger.LogDebug($"Badrequest: {responseMessage}");
+				return BadRequest(responseMessage); 
+			}
+
+			logger.LogDebug($"Redirecting to identityservice with redirecturl '{redirectUrl}'");
 
 			return Redirect(authConnector.GenerateLoginRedirectUrl(redirectUrl));
 		}
@@ -40,18 +48,26 @@ namespace LetsChess_Backend.Controllers
 		[HttpGet("userinfo")]
 		public async Task<IActionResult> Userinfo()
 		{
-			if(Request.Headers.TryGetValue("authorization",out var authToken)){
+			logger.LogDebug($"Requesting userinfo");
+
+			if (Request.Headers.TryGetValue("authorization",out var authToken)){
 				var accessToken = authToken.ToString().Split(' ').Last();
 				var result = await authConnector.RetrieveUserInfo(accessToken);
-				return Ok(result);
-			}
-			return Unauthorized();
-		}
+				try
+				{
+					// send it to the userservice
+					var userData = JsonConvert.DeserializeObject<GoogleUserInfoResult>(result);
+					var userinfoResult = await userServiceConnector.Register(new User { ExternalId = userData.Sub, ImageUrl = userData.Picture, Username = userData.Name });
 
-		[HttpPost("loginSuccessRedirect"), HttpGet("loginSuccessRedirect")]
-		public IActionResult LoginSuccessRedirect() {		
-			var uri = "http://localhost:3000/auth/redirected";
-			return Redirect(uri);
+					return Ok(JsonConvert.SerializeObject(userinfoResult));
+				}
+				catch (Exception e) {
+					logger.LogError(e, $"error from userservice: {e.Message}");
+					throw new Exception("Connection to userservice could not be established",e);
+				}
+			}
+
+			return Unauthorized();
 		}
 	}
 }
