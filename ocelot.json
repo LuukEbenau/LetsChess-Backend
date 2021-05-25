@@ -1,19 +1,14 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/matchmaking/findmatch",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/matchmaking/findmatch",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44383
+          "Host": "{MatchmakingService}"
         }
       ],
-      "UpstreamPathTemplate": "/api/matchmaking/findmatch",
+      "UpstreamPathTemplate": "/matchmaking/findmatch",
       "UpstreamHttpMethod": [ "Post" ]
     }
-  ],
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:44323"
-  }
+  ]
 }

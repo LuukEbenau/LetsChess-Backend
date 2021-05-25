@@ -43,16 +43,19 @@ namespace LetsChess_Backend
 				.CreateDefaultBuilder(args)
 				.ConfigureAppConfiguration((hostingContext, config) =>
 			{
-				config.AddJsonFile($"ocelot.json");
+				
 
 				var env = hostingContext.HostingEnvironment;
 				Console.WriteLine($"the environment is now: {env.EnvironmentName}");
 
 				//TODO: hij pakt deze niet goed in kubernetes?
-				config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+				config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json",
 								optional: true, reloadOnChange: true);
 
+				config.AddJsonFile($"ocelot.json", optional: true, reloadOnChange: true)
+				.AddJsonFile($"ocelot.{env.EnvironmentName}.json",
+								optional: true, reloadOnChange: true);
 			})
 			.ConfigureWebHostDefaults(webBuilder =>
 			{

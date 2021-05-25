@@ -1,27 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using LetsChess_Backend.Logic;
-using NLog.Extensions.Logging;
 using LetsChess_Backend.WSClients;
 using LetsChess_Backend.WSHub;
 using Ocelot.DependencyInjection;
@@ -44,12 +27,15 @@ namespace LetsChess_Backend
 			{
 				options.AddDefaultPolicy(options =>
 				{
+					var allowedHosts = Configuration.GetSection("AllowedHosts").Get<string[]>();
 					options.AllowCredentials()
-					.WithOrigins("localhost", "localhost:3000", "http://localhost:3000")
+					.WithOrigins(allowedHosts)
 					.AllowAnyMethod().AllowAnyHeader();
 				});
 			});
-			services.AddOcelot();
+			services.AddOcelot(Configuration);
+			services.AddOcelotPlaceholderSupport(Configuration);
+
 			services.AddControllers();
 
 			services.AddSwaggerGen(c =>
@@ -82,7 +68,6 @@ namespace LetsChess_Backend
 
 			app.UseHttpsRedirection();
 			
-
 			app.UseRouting();
 
 			app.UseAuthentication();
