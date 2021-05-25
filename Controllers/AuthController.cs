@@ -14,7 +14,7 @@ using LetsChess_Backend.WSClients;
 
 namespace LetsChess_Backend.Controllers
 {
-	[Route("api/auth")]
+	[Route("auth")]
 	[ApiController]
 	public class AuthController : ControllerBase
 	{
