@@ -33,7 +33,7 @@ namespace LetsChess_Backend
 					.AllowAnyMethod().AllowAnyHeader();
 				});
 			});
-			services.AddOcelot(Configuration);
+			var ocbuilder = services.AddOcelot(Configuration);
 			services.AddOcelotPlaceholderSupport(Configuration);
 
 			services.AddControllers();
@@ -42,7 +42,7 @@ namespace LetsChess_Backend
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "LetsChess_Backend", Version = "v1" });
 			});
-
+			services.Configure<Credentials>(Configuration.GetSection("MQCredentials"));
 			services.Configure<AuthSettings>(Configuration.GetSection("Authentication:Google"));
 			services.Configure<ServiceEndpoints>(Configuration.GetSection("ServiceEndpoints"));
 			services.AddAuthorization().AddAuthentication().AddGoogleOpenIdConnect(o =>
@@ -52,7 +52,7 @@ namespace LetsChess_Backend
 				o.ClientSecret = googleAuthNSection["ClientSecret"];
 			});
 			services.AddSignalR(c => c.EnableDetailedErrors = true);
-			services.AddSingleton<MatchmakingWSClient>();
+			services.AddSingleton<MatchmakingClient>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +66,7 @@ namespace LetsChess_Backend
 			}
 			app.UseCors();
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			
 			app.UseRouting();
 
@@ -81,7 +81,7 @@ namespace LetsChess_Backend
 			await app.UseOcelot();
 
 			//initialize it
-			app.ApplicationServices.GetService<MatchmakingWSClient>();
+			app.ApplicationServices.GetService<MatchmakingClient>();
 		}
 	}
 }

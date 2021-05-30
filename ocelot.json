@@ -9,6 +9,16 @@
       ],
       "UpstreamPathTemplate": "/matchmaking/findmatch",
       "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/matchmaking/appel",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{MatchmakingService}"
+        }
+      ],
+      "UpstreamPathTemplate": "/matchmaking/appel",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ]
 }

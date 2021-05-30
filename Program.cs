@@ -22,7 +22,6 @@ namespace LetsChess_Backend
 			var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 			try
 			{
-				
 				logger.Debug($"starting application '{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}'");
 				CreateHostBuilder(args).Build().Run();
 			}
@@ -53,9 +52,12 @@ namespace LetsChess_Backend
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json",
 								optional: true, reloadOnChange: true);
 
+				config.AddEnvironmentVariables("LETSCHESS_");
+
 				config.AddJsonFile($"ocelot.json", optional: true, reloadOnChange: true)
 				.AddJsonFile($"ocelot.{env.EnvironmentName}.json",
 								optional: true, reloadOnChange: true);
+
 			})
 			.ConfigureWebHostDefaults(webBuilder =>
 			{

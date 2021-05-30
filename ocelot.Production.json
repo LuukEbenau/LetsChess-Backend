@@ -1,5 +1,5 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "https://api.letschess.nl"
+    "BaseUrl": "http://api.letschess.nl"
   }
 }

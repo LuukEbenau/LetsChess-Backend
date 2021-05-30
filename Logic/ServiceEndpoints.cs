@@ -9,5 +9,6 @@ namespace LetsChess_Backend.Logic
 	{
 		public string UserService { get; set; }
 		public string MatchmakingService { get; set; }
+		public string MQ { get; set; }
 	}
 }
