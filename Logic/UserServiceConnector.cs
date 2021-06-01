@@ -23,7 +23,7 @@ namespace LetsChess_Backend.Logic
 			using HttpClient client = new();
 			var data = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 			var url = $"{UserserviceEndpoint}/user/register";
-			Console.WriteLine("sending request to: " + url);
+
 			var result = await client.PostAsync(url,data);
 			if (result.Content != null) {
 				var response = await result.Content.ReadAsStringAsync();

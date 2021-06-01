@@ -12,6 +12,8 @@ using NLog.Web;
 using Microsoft.AspNetCore;
 using NLog.Extensions.Logging;
 using System.IO;
+using NLog;
+using NLog.Targets.ElasticSearch;
 
 namespace LetsChess_Backend
 {
@@ -19,7 +21,15 @@ namespace LetsChess_Backend
 	{
 		public static void Main(string[] args)
 		{
-			var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+			var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+			var config = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+				.AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true).Build();
+
+			LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
+			var logger = NLogBuilder.ConfigureNLog(LogManager.Configuration).GetCurrentClassLogger();
+
 			try
 			{
 				logger.Debug($"starting application '{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}'");
@@ -66,7 +76,7 @@ namespace LetsChess_Backend
 				.ConfigureLogging(logging =>
 				{
 					logging.ClearProviders();
-					logging.SetMinimumLevel(LogLevel.Trace);
+					logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 				});
 			}).UseNLog();
 		}

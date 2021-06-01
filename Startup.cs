@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using LetsChess_Backend.Logic;
-using LetsChess_Backend.WSClients;
 using LetsChess_Backend.WSHub;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Microsoft.AspNetCore.Http;
 
 namespace LetsChess_Backend
 {
@@ -42,6 +42,7 @@ namespace LetsChess_Backend
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "LetsChess_Backend", Version = "v1" });
 			});
+			services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 			services.Configure<Credentials>(Configuration.GetSection("MQCredentials"));
 			services.Configure<AuthSettings>(Configuration.GetSection("Authentication:Google"));
 			services.Configure<ServiceEndpoints>(Configuration.GetSection("ServiceEndpoints"));
@@ -52,7 +53,8 @@ namespace LetsChess_Backend
 				o.ClientSecret = googleAuthNSection["ClientSecret"];
 			});
 			services.AddSignalR(c => c.EnableDetailedErrors = true);
-			services.AddSingleton<MatchmakingClient>();
+			services.AddSingleton<MQConnector>();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +83,7 @@ namespace LetsChess_Backend
 			await app.UseOcelot();
 
 			//initialize it
-			app.ApplicationServices.GetService<MatchmakingClient>();
+			app.ApplicationServices.GetService<MQConnector>();
 		}
 	}
 }

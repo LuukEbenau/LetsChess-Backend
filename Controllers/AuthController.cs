@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-using LetsChess_Backend.WSClients;
 
 namespace LetsChess_Backend.Controllers
 {
@@ -18,14 +17,12 @@ namespace LetsChess_Backend.Controllers
 	[ApiController]
 	public class AuthController : ControllerBase
 	{
-		private readonly AuthSettings authSettings;
 		private readonly GoogleConnector authConnector;
 		private readonly UserServiceConnector userServiceConnector;
 		private readonly ILogger<AuthController> logger;
 
 		public AuthController(IOptions<AuthSettings> authSettings, IOptions<ServiceEndpoints> serviceEndpoints, ILogger<AuthController> logger)
 		{
-			this.authSettings = authSettings.Value;
 			authConnector = new GoogleConnector(authSettings.Value.ClientId);
 			userServiceConnector = new UserServiceConnector(serviceEndpoints?.Value?.UserService);
 

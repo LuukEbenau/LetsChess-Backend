@@ -30,9 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="nlog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\LetsChess.Models\LetsChess.Models.csproj" />
   </ItemGroup>
 
 </Project>

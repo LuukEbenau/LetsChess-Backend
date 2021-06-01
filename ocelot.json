@@ -11,14 +11,14 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
-      "DownstreamPathTemplate": "/matchmaking/appel",
+      "DownstreamPathTemplate": "/game/takemove",
       "DownstreamHostAndPorts": [
         {
-          "Host": "{MatchmakingService}"
+          "Host": "{GameService}"
         }
       ],
-      "UpstreamPathTemplate": "/matchmaking/appel",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/game/takemove",
+      "UpstreamHttpMethod": [ "Post" ]
     }
   ]
 }
