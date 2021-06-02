@@ -46,6 +46,7 @@ namespace LetsChess_Backend
 			services.Configure<Credentials>(Configuration.GetSection("MQCredentials"));
 			services.Configure<AuthSettings>(Configuration.GetSection("Authentication:Google"));
 			services.Configure<ServiceEndpoints>(Configuration.GetSection("ServiceEndpoints"));
+
 			services.AddAuthorization().AddAuthentication().AddGoogleOpenIdConnect(o =>
 			{
 				IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
@@ -54,7 +55,7 @@ namespace LetsChess_Backend
 			});
 			services.AddSignalR(c => c.EnableDetailedErrors = true);
 			services.AddSingleton<MQConnector>();
-			//services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

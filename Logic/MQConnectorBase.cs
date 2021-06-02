@@ -29,8 +29,8 @@ namespace LetsChess_Backend.Logic
 			_factory = new ConnectionFactory()
 			{
 				Endpoint = new AmqpTcpEndpoint(new Uri(connectionStrings.Value.MQ)),
-				UserName = mqCredentials.Value.Username,
-				Password = mqCredentials.Value.Password,
+				UserName = mqCredentials.Value?.Username,
+				Password = mqCredentials.Value?.Password,
 			};
 
 			Connect();
