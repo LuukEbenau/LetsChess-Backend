@@ -1,6 +1,5 @@
-﻿using LetsChess.Models.Messages;
-
-using LetsChess_Models.Models;
+﻿
+using LetsChess_Backend.Messages;
 
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

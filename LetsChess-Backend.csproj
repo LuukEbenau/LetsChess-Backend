@@ -29,8 +29,4 @@
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\shared\LetsChess.Models\LetsChess.Models.csproj" />
-  </ItemGroup>
-
 </Project>

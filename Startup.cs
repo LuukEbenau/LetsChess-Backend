@@ -75,7 +75,7 @@ namespace LetsChess_Backend
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
