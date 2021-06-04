@@ -34,4 +34,3 @@ COPY --from=publish /app/publish .
 ARG PROJ_NAME
 ENV PROJ=${PROJ_NAME}
 ENTRYPOINT ["sh","-c","dotnet ./${PROJ}.dll"]
-#ENTRYPOINT ["dotnet" ,"./LetsChess-Backend.dll"]
