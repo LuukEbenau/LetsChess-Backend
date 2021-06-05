@@ -10,19 +10,19 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 ARG PROJ_NAME
 
 WORKDIR /src
-COPY ["./$PROJ_NAME.csproj", "./$PROJ_NAME.csproj"]
+COPY ["./$PROJ_NAME/$PROJ_NAME.csproj", "./$PROJ_NAME/$PROJ_NAME.csproj"]
 
 RUN ls 
-RUN dotnet restore "./$PROJ_NAME.csproj"
-COPY . .
+RUN dotnet restore "./$PROJ_NAME/$PROJ_NAME.csproj"
+COPY ./$PROJ_NAME ./$PROJ_NAME
 
 WORKDIR "/src/."
-RUN dotnet build "./$PROJ_NAME.csproj" -c Release -o /app/build
+RUN dotnet build "./$PROJ_NAME/$PROJ_NAME.csproj" -c Release -o /app/build
 
 FROM build AS publish
 ARG PROJ_NAME
 
-RUN dotnet publish "./$PROJ_NAME.csproj" -c Release -o /app/publish
+RUN dotnet publish "./$PROJ_NAME/$PROJ_NAME.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
