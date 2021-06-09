@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsChess-Backend.Test", "L
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD212122-E605-450B-B0BC-AADF39A0F98C}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build and test.yml = .github\workflows\build and test.yml
 		Dockerfile = Dockerfile
 		update-service.bat = update-service.bat
 	EndProjectSection

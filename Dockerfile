@@ -26,7 +26,6 @@ RUN dotnet publish "./$PROJ_NAME/$PROJ_NAME.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
-
 WORKDIR /app
 COPY --from=publish /app/publish .
 ARG PROJ_NAME
