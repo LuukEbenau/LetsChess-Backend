@@ -1,6 +1,8 @@
 name: Continious delivery to Docker hub
 on:
-  push:
+  pull_request:
+    types:
+      - "closed"
     branches: [ releases/** ]
 jobs:
   push_to_registry:
@@ -16,8 +18,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
-        env:
-          TAG: ${"refs/heads/releases/1.0.0".split("/")}
         with:
           push: true
-          tags: sacation/letschess-backend:${{ env.TAG }}
+          tags: sacation/letschess-backend:${{ github.base_ref }}
