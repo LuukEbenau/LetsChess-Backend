@@ -17,7 +17,7 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         env:
-          TAG: ${{ cut -d "/" -f4 <<< "refs/heads/releases/1.0.0" }}
+          TAG: ${{ "refs/heads/releases/1.0.0".split("/")[0] }}
         with:
           push: true
           tags: sacation/letschess-backend:${{ TAG }}
