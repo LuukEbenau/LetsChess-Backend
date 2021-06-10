@@ -29,9 +29,12 @@ namespace LetsChess_Backend
 
 		ClaimsPrincipal ISecurityTokenValidator.ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
 		{
-            var payload = GoogleJsonWebSignature.ValidateAsync(securityToken, new GoogleJsonWebSignature.ValidationSettings()).Result; // here is where I delegate to Google to validate
-
+            var payload = GoogleJsonWebSignature.ValidateAsync(securityToken, new GoogleJsonWebSignature.ValidationSettings()).Result; 
             validatedToken = new JwtSecurityToken(securityToken);
+
+            //TODO: send request to userService to receive any other data
+            //var userData = JsonConvert.DeserializeObject<GoogleUserInfoResult>(result);
+            //var userinfoResult = await userServiceConnector.Register(new User { ExternalId = userData.Sub, ImageUrl = userData.Picture, Username = userData.Name });
 
             var claims = new List<Claim>
                 {
@@ -48,8 +51,7 @@ namespace LetsChess_Backend
             try
             {
                 var principle = new ClaimsPrincipal();
-                
-        
+
                 principle.AddIdentity(new ClaimsIdentity(claims, Microsoft.IdentityModel.Claims.AuthenticationTypes.Password));
                 return principle;
             }
@@ -57,7 +59,6 @@ namespace LetsChess_Backend
             {
                 Console.WriteLine(e);
                 throw;
-
             }
         }
 	}

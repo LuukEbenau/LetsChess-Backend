@@ -31,42 +31,18 @@ namespace LetsChess_Backend.Controllers
 		}
 
 		[HttpGet("redirectToIdentity")]
-		public IActionResult RedirectToIdentity(string redirectUrl) {
-			if (redirectUrl == default) {
+		public IActionResult RedirectToIdentity(string redirectUrl)
+		{
+			if (redirectUrl == default)
+			{
 				var responseMessage = "the Required parameter redirectUrl is not supplied";
 				logger.LogDebug($"Badrequest: {responseMessage}");
-				return BadRequest(responseMessage); 
+				return BadRequest(responseMessage);
 			}
 
 			logger.LogDebug($"Redirecting to identityservice with redirecturl '{redirectUrl}'");
 
 			return Redirect(authConnector.GenerateLoginRedirectUrl(redirectUrl));
-		}
-		//)
-		[Authorize(Roles = "player")]
-		[HttpGet("userinfo")]
-		public async Task<IActionResult> Userinfo()
-		{
-			logger.LogDebug($"Requesting userinfo");
-
-			/*	if (Request.Headers.TryGetValue("authorization",out var authToken)){
-					var idToken = authToken.ToString().Split(' ').Last();
-					var result = await authConnector.RetrieveUserInfo(idToken);
-					try
-					{
-						// send it to the userservice
-						var userData = JsonConvert.DeserializeObject<GoogleUserInfoResult>(result);
-						var userinfoResult = await userServiceConnector.Register(new User { ExternalId = userData.Sub, ImageUrl = userData.Picture, Username = userData.Name });
-
-						return Ok(JsonConvert.SerializeObject(userinfoResult));
-					}
-					catch (Exception e) {
-						logger.LogError(e, $"error from userservice: {e.Message}");
-						throw new Exception("Connection to userservice could not be established",e);
-					}
-				}*/
-
-			return Ok();
 		}
 	}
 }
