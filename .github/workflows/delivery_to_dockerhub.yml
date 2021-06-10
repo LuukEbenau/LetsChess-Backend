@@ -1,8 +1,6 @@
 name: Continious delivery to Docker hub
 on:
-  pull_request:
-    types:
-      - "closed"
+  push:
     branches: [ releases/** ]
 jobs:
   push_to_registry:
