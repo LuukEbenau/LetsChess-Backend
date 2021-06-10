@@ -20,4 +20,4 @@ jobs:
           TAG: ${{ "refs/heads/releases/1.0.0".split("/")[0] }}
         with:
           push: true
-          tags: sacation/letschess-backend:${{ TAG }}
+          tags: sacation/letschess-backend:${{ env.TAG }}
