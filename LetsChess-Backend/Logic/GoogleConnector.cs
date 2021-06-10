@@ -17,10 +17,10 @@ namespace LetsChess_Backend.Logic
 			this.clientId = clientId;
 		}
 
-		public async Task<string> RetrieveUserInfo(string accessToken) {
+		public async Task<string> RetrieveUserInfo(string idToken) {
 			using HttpClient client = new();
 			
-			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, accessToken);
+			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, idToken);
 			var result = await client.GetStringAsync("https://openidconnect.googleapis.com/v1/userinfo");
 			return result;
 		}
@@ -32,7 +32,8 @@ namespace LetsChess_Backend.Logic
 			{
 				{ "client_id", clientId },
 				{ "redirect_uri", postLoginRedirectUrl },
-				{ "response_type", "token" },
+				{ "response_type", "id_token token" },
+				{ "nonce", "appelsap"},
 				{ "scope", "profile" },
 			};
 

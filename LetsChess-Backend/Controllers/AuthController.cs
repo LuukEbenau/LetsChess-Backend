@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LetsChess_Backend.Controllers
 {
@@ -41,30 +42,31 @@ namespace LetsChess_Backend.Controllers
 
 			return Redirect(authConnector.GenerateLoginRedirectUrl(redirectUrl));
 		}
-
+		//)
+		[Authorize(Roles = "player")]
 		[HttpGet("userinfo")]
 		public async Task<IActionResult> Userinfo()
 		{
 			logger.LogDebug($"Requesting userinfo");
 
-			if (Request.Headers.TryGetValue("authorization",out var authToken)){
-				var accessToken = authToken.ToString().Split(' ').Last();
-				var result = await authConnector.RetrieveUserInfo(accessToken);
-				try
-				{
-					// send it to the userservice
-					var userData = JsonConvert.DeserializeObject<GoogleUserInfoResult>(result);
-					var userinfoResult = await userServiceConnector.Register(new User { ExternalId = userData.Sub, ImageUrl = userData.Picture, Username = userData.Name });
+			/*	if (Request.Headers.TryGetValue("authorization",out var authToken)){
+					var idToken = authToken.ToString().Split(' ').Last();
+					var result = await authConnector.RetrieveUserInfo(idToken);
+					try
+					{
+						// send it to the userservice
+						var userData = JsonConvert.DeserializeObject<GoogleUserInfoResult>(result);
+						var userinfoResult = await userServiceConnector.Register(new User { ExternalId = userData.Sub, ImageUrl = userData.Picture, Username = userData.Name });
 
-					return Ok(JsonConvert.SerializeObject(userinfoResult));
-				}
-				catch (Exception e) {
-					logger.LogError(e, $"error from userservice: {e.Message}");
-					throw new Exception("Connection to userservice could not be established",e);
-				}
-			}
+						return Ok(JsonConvert.SerializeObject(userinfoResult));
+					}
+					catch (Exception e) {
+						logger.LogError(e, $"error from userservice: {e.Message}");
+						throw new Exception("Connection to userservice could not be established",e);
+					}
+				}*/
 
-			return Unauthorized();
+			return Ok();
 		}
 	}
 }
