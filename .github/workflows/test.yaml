@@ -6,4 +6,4 @@ jobs:
     steps:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
-      - run: IFS="refs/head/" read -r -a array <<< ${{ github.ref }} ; echo "$array"
+      - run: cut -d "refs/head" -f2 <<< ${{ github.ref }}
