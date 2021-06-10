@@ -4,6 +4,8 @@ on:
     branches: [ releases/** ]
 jobs:
   push_to_registry:
+    env:
+      REPO_NAME: sacation/letschess-backend
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -19,8 +21,14 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/releases/})"
         id: extract_branch
+        
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: sacation/letschess-backend:${{ steps.extract_branch.outputs.branch }}
+          tags: ${{ env.REPO_NAME }}:${{ steps.extract_branch.outputs.branch }}
+      - name: Push to Docker Hub latest tag
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ env.REPO_NAME }}:latest
