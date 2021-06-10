@@ -1,7 +1,7 @@
 name: Continious delivery to Docker hub
 on:
-  push:
-    branches: [ master ]
+  pull_request:
+    branches: [ releases/** ]
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -18,4 +18,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: sacation/letschess-backend:latest
+          tags: sacation/letschess-backend:${{ github.ref }}
